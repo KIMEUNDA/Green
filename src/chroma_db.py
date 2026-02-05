@@ -1,6 +1,7 @@
 import os
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 
@@ -9,12 +10,26 @@ load_dotenv()
 CHROMA_DB_PATH = os.getenv('CHROMA_DB_PATH', './chroma_db')
 COLLECTION_NAME = 'documents'
 
+# 임베딩 모델 설정 (기본: sentence-transformers)
+EMBEDDING_MODEL_NAME = os.getenv('EMBEDDING_MODEL_NAME', 'sentence-transformers/all-MiniLM-L6-v2')
+
+def get_embedding_function():
+    """임베딩 모델 함수 반환"""
+    embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
+        model_name=EMBEDDING_MODEL_NAME,
+        device="cuda"  # GPU 사용 (없으면 자동으로 CPU로 변경됨)
+    )
+    return embedding_function
+
 def get_chroma_client():
     """ChromaDB 클라이언트 반환 (로컬 폴더에 저장)"""
+    embedding_function = get_embedding_function()
+    
     client = chromadb.Client(Settings(
         is_persistent=True,
         persist_directory=CHROMA_DB_PATH,
-        anonymized_telemetry=False
+        anonymized_telemetry=False,
+        embedding_function=embedding_function
     ))
     return client
 

@@ -1,0 +1,9 @@
+[runner]
+fastReruns = true
+
+[client]
+showSpinner = false
+toolbarMode = "minimal"
+
+[ui]
+hideTopBar = false

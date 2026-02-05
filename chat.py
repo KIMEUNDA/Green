@@ -38,7 +38,7 @@ def chat_page(cookies=None):
     st.markdown(f"""
         <style>
         /* 기본 레이아웃 */
-        [data-testid="stSidebarNav"], [data-testid="stStatusWidget"] {{ display: none !important; }}
+        [data-testid="stSidebarNav"], [data-testid="stStatusWidget"], [data-testid="stSpinner"], .stSpinner, [data-testid="stAppViewBlockContainer"] > div:first-child > div[data-testid="stVerticalBlock"] > div:first-child iframe {{ display: none !important; }}
         header {{ background-color: #3D4936 !important; z-index: 999 !important; }}
         .stApp {{ background-color: #F8F9F2; }}
         

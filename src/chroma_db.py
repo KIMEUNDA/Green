@@ -1,6 +1,7 @@
 import os
 import chromadb
 from chromadb.config import Settings
+from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 
@@ -8,6 +9,14 @@ load_dotenv()
 
 CHROMA_DB_PATH = os.getenv('CHROMA_DB_PATH', './chroma_db')
 COLLECTION_NAME = 'documents'
+EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'text-embedding-nomic-embed-text-v1.5')
+OPENAI_BASE_URL = os.getenv('OPENAI_BASE_URL', 'http://localhost:1234/v1')
+
+embedding_fn = OpenAIEmbeddingFunction(
+    api_key="lm-studio",
+    model_name=EMBEDDING_MODEL,
+    api_base=OPENAI_BASE_URL
+)
 
 def get_chroma_client():
     """ChromaDB 클라이언트 반환 (로컬 폴더에 저장)"""
@@ -21,7 +30,7 @@ def get_chroma_client():
 def get_collection():
     """컬렉션 반환 (없으면 생성)"""
     client = get_chroma_client()
-    collection = client.get_or_create_collection(name=COLLECTION_NAME)
+    collection = client.get_or_create_collection(name=COLLECTION_NAME, embedding_function=embedding_fn)
     return collection, client
 
 def extract_text_from_pdf(uploaded_file) -> str:

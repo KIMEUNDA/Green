@@ -8,7 +8,7 @@ st.set_page_config(layout="wide", page_title="GreenBio Chatbot")
 
 # --- 쿠키 매니저 초기화 ---
 cookies = CookieManager()
-cookies.get('greenbio_login')  # 쿠키 읽기 트리거
+cookie_val = cookies.get('greenbio_login')
 
 # --- 세션 초기화 ---
 if 'logged_in' not in st.session_state:
@@ -16,27 +16,34 @@ if 'logged_in' not in st.session_state:
 if 'user_info' not in st.session_state:
     st.session_state['user_info'] = None
 
+# 1. URL에서 로그아웃 신호 감지
+is_logging_out = st.query_params.get("logout") == "1"
+
+# --- 로그아웃 처리 ---
+if is_logging_out:
+    # 세션 변수 명시적 해제
+    st.session_state['logged_in'] = False
+    st.session_state['user_info'] = None
+    
+    # 쿠키 삭제 명령 (이제 rerun이 없으므로 브라우저에 무사히 도착함)
+    cookies.delete('greenbio_login')
+    
+    # URL 파라미터 깔끔하게 지우기
+    st.query_params.clear()
+
 # --- 쿠키에서 로그인 복원 ---
-if not st.session_state['logged_in']:
-    cookie_val = cookies.get('greenbio_login')
+# 2. 방어막: 로그아웃 중이 아닐 때만(and not is_logging_out) 쿠키를 읽어 자동 로그인
+if not st.session_state['logged_in'] and not is_logging_out:
     if cookie_val:
         try:
-            # CookieManager가 자동 파싱하여 dict를 반환할 수 있음
             data = json.loads(cookie_val) if isinstance(cookie_val, str) else cookie_val
             st.session_state['logged_in'] = True
             st.session_state['user_info'] = {
                 'username': data['username'],
                 'role': data['role']
             }
-        except (json.JSONDecodeError, KeyError, TypeError):
+        except:
             cookies.delete('greenbio_login')
-
-# --- 로그아웃 처리 ---
-if st.query_params.get("logout") == "1":
-    cookies.delete('greenbio_login')
-    st.session_state.clear()
-    st.query_params.clear()
-    st.rerun()
 
 # --- 페이지 라우팅 ---
 if st.session_state.get('logged_in'):

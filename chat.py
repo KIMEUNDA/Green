@@ -30,6 +30,7 @@ def chat_page(cookies=None):
     st.session_state.setdefault("chat_sessions", {k: {} for k in GREENBIOCHAT})
     st.session_state.setdefault("active_chat_id", {k: None for k in GREENBIOCHAT})
     st.session_state.setdefault("is_generating", False)
+    
 
     # --- CSS: 사이드바 위에서도 글씨가 보이도록 설정 ---
     username = st.session_state.get("user_info", {}).get("username", "User")
@@ -123,7 +124,7 @@ def chat_page(cookies=None):
             <label for="profile-checkbox" class="profile-circle">{user_initial}</label>
             <div class="profile-dropdown">
                 <div style="padding: 10px 16px; font-size: 11px; color: #888; background: #fafafa;">{username}님</div>
-                <a href="?logout=1" class="dropdown-item" style="color: red !important;">로그아웃</a>
+                <a href="?logout=1" target="_top" class="dropdown-item" style="color: red !important;">로그아웃</a>
             </div>
         </div>
     """, unsafe_allow_html=True)

@@ -7,3 +7,20 @@ toolbarMode = "minimal"
 
 [ui]
 hideTopBar = false
+
+[theme]
+# 포인트 컬러 (기본 붉은색 -> 세련된 리프 그린으로 변경)
+# 버튼, 체크박스, 입력창 포커스 등에 적용됩니다.
+primaryColor = "#6A994E"
+
+# 메인 배경색 (현재 설정하신 F8F9F2와 동일하게 맞춰 안정감을 줍니다)
+backgroundColor = "#F8F9F2"
+
+# 보조 배경색 (입력창 배경, 사이드바 기본 배경 등에 쓰이는 은은한 색)
+secondaryBackgroundColor = "#EAECE4"
+
+# 텍스트 색상 (완전 검은색보다 눈이 편안한 아주 어두운 녹회색)
+textColor = "#1A2017"
+
+# 폰트 (깔끔한 고딕/산세리프 계열)
+font = "sans serif"
